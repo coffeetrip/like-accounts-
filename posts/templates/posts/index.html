@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block body %}
 
-<h1>인덱스</h1>
 
+{% for post in posts %}
+
+<!-- 다른곳에서도 재사용하기 위해 include -->
+{% include 'posts/_post.html' %}
+
+{% endfor %}
 {% endblock %}

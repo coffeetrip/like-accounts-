@@ -1,0 +1,18 @@
+{% load make_link %}
+
+<div class="card col-6">
+	<img src="{{post.image.url}}" class="card-img-top" alt="...">
+	<div class="card-body">
+		<h5 class="card-title">Card title</h5>
+		<p class="card-text">{{post|hashtag_link|safe}}</p>
+		<!-- hashtag_link(post) -->
+		<!-- safe 이 링크는 안전한거라고 알려줌(안하면 text처럼 나옴) -->
+
+
+		{% if user in post.like_users.all %}
+		<a href="{% url 'posts:like' post.id %}"><i class="fas fa-heart"></i>{{post.like_users.count}}</a>
+		{% else %}
+		<a href="{% url 'posts:like' post.id %}"><i class="far fa-heart"></i>{{post.like_users.count}}</a>
+		{% endif %}
+	</div>
+</div>

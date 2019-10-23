@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<!-- 사진올릴 때 enctype="multipart/form-data" 꼭 써야한다. -->
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit">
+</form>
+{% endblock %}
