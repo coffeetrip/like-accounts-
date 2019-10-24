@@ -1,4 +1,5 @@
 from django import template
+import re
 
 register = template.Library()
 
@@ -11,7 +12,13 @@ def hashtag_link(post):
     # QureySet [HashTag object (1:고양이), HashTag object (2:야옹)...]
 
     for hashtag in hashtags:
-        content = content.replace(f'{hashtag.content}',
-                                  f'<a href="/posts/hashtags/{hashtag.id}/">{hashtag.content}</a>'
-                                  )
+        # content = content.replace(
+        #     f'{hashtag.content}',
+        #     f'<a href="/posts/hashtags/{hashtag.id}/">{hashtag.content}</a>'
+        # )
+        content = re.sub(
+            fr'{hashtag.content}\b',
+            f'<a href="/posts/hashtags/{hashtag.id}/">{hashtag.content}</a>',
+            content
+        )
     return content

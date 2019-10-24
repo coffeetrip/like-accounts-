@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
+{% load bootstrap_pagination %}
 {% block body %}
 
+<div class="row">
+    {% for post in posts %}
+    <!-- 다른곳에서도 재사용하기 위해 include -->
+    {% include 'posts/_post.html' %}
+    {% endfor %}
+</div>
 
-{% for post in posts %}
+{% bootstrap_paginate posts %}
 
-<!-- 다른곳에서도 재사용하기 위해 include -->
-{% include 'posts/_post.html' %}
-
-{% endfor %}
 {% endblock %}

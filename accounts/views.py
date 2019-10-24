@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from .forms import CustomUserCreationForm
+from django.contrib.auth import update_session_auth_hash
 from .models import User
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
 def signup(request):
@@ -58,4 +59,51 @@ def follow(request, id):
             you.followers.add(me)
             # me.followings.add(you)
 
-    return redirect('accounts:user_page', id)
+    return redirect('accounts:  user_page', id)
+
+
+def delete(request, id):
+    user_info = get_object_or_404(User, id)
+    user = request.user
+
+    if user_info == user:
+        user_info.delete()  # 소셜과 모두 탈퇴
+    return redirect('posts:ind  ex')
+
+
+def update(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('posts:index')
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/form.html', context)
+
+
+def password(request):
+    if request.method == 'POST':
+        # password update (로그인한사람, 최신정보)
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)  # 로그인
+            return redirect('posts:index')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/form.html', context)
+
+
+def profile(request):
+    user_info = request.user
+    context = {
+        'user_info': user_info
+    }
+    return render(request, 'accounts/user_page.html', context)

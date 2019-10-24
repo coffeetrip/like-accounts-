@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
 {% block body %}
-<!-- views -->
-<h1>{{user_info.username}}님의 페이지 입니다.</h1>
 
-<h5>{{user_info.username}}를 팔로우 하는 사람 {{user_info.followers.all}}</h5>
-<h5>팔로워 : {{user_info.followers.all|length}}</h5>
-<h5>{{user_info.username}}가 팔로우 하는 사람 {{user_info.followings.all}}</h5>
-<h5>팔로잉 : {{user_info.followings.all|length}}</h5>
-
-<!-- 로그인한 user and 자기자신 아닐 때-->
-{% if user.is_authenticated and user != user_info %}
-<a href="{% url 'accounts:follow' user_info.id %}">팔로우</a>
-{% endif %}
-{% endblock %}
+<div class="jumbotron">
+    <!-- views -->
+    <h1 class="display-4">{{user_info.username}}님의 페이지</h1>
+    <!-- <p class="lead">{{user_info.username}}를 팔로우 하는 사람 {{user_info.followers.all}}</p> -->
+    <p>팔로워 : {{user_info.followers.all|length}}</p>
+    <!-- <p class="lead">{{user_info.username}}가 팔로우 하는 사람 {{user_info.followings.all}}</p> -->
+    <p>팔로잉 : {{user_info.followings.all|length}}</p>
+    <hr class="my-4">
+    <!-- 로그인한 user and 자기자신 아닐 때-->
+    {% if user.is_authenticated and user != user_info %}
+    <a href="{% url 'accounts:follow' user_info.id %}">팔로우</a>
+    {% else %}
+    <!-- user로그인한사람, user_info 페이지사람 -->
+    <div class="row">
+        <a href="{% url 'accounts:update' %}" class="btn btn-primary mr-3">정보수정</a>
+        <a href="{% url 'accounts:password' %}" class="btn btn-success mr-3">비밀번호변경</a>
+        <a href="{% url 'accounts:delete' user_info.id %}" class="btn btn-danger mr-3">회원탈퇴(get)</a>
+        <form action="{% url 'accounts:delete' user_info.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="탈퇴(post)" class="btn btn-danger ">
+        </form>
+    </div>
+    {% endif %}
+    {% endblock %}
+</div>

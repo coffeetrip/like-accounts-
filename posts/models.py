@@ -24,3 +24,11 @@ class Post(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     hashtags = models.ManyToManyField(HashTag, related_name="taged_post")
 # post안에 hashtag가 있다.(사실위치상관 x)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    content = models.CharField(max_length=100)
+    comment_user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                     on_delete=models.CASCADE)
+    create_at = models.DateTimeField(auto_now_add=True)
