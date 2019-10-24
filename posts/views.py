@@ -3,8 +3,10 @@ from .forms import PostForm, CommentForm
 from .models import Post, HashTag, Comment
 from django.core.paginator import Paginator
 from accounts.models import User
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def index(request):
     posts = Post.objects.all()
     paginator = Paginator(posts, 4)  # 한 페이지에 몇개를 보여줄지
@@ -20,6 +22,7 @@ def index(request):
     return render(request, 'posts/index.html', context)
 
 
+@login_required
 def create(request):
     if request.method == 'POST':
         # 이미지는 request.FILES로 받아야함
@@ -44,6 +47,7 @@ def create(request):
     return render(request, 'posts/form.html', context)
 
 
+@login_required
 def update(request, id):
     post = get_object_or_404(Post, id=id)
     if request.method == 'POST':
@@ -64,6 +68,7 @@ def update(request, id):
     return render(request, 'posts/form.html', context)
 
 
+@login_required
 def delete(request, id):
     post = get_object_or_404(Post, id=id)
     if request.method == 'POST':
@@ -71,6 +76,7 @@ def delete(request, id):
         return redirect('posts:index')
 
 
+@login_required
 def hashtags(request, id):
     hashtag = get_object_or_404(HashTag, id=id)
     posts = hashtag.taged_post.all()
@@ -87,6 +93,7 @@ def hashtags(request, id):
     return render(request, 'posts/index.html', context)
 
 
+@login_required
 def like(request, id):
     you = get_object_or_404(Post, id=id)
     me = request.user
@@ -100,6 +107,7 @@ def like(request, id):
     return redirect('posts:index')
 
 
+@login_required
 def comment_create(request, id):
     post = get_object_or_404(Post, id=id)
     if request.method == 'POST':
@@ -112,6 +120,7 @@ def comment_create(request, id):
             return redirect('posts:index')
 
 
+@login_required
 def comment_delete(request, p_id, c_id):
     comment = get_object_or_404(Comment, id=c_id)
     if request.method == 'POST':
